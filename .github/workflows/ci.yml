@@ -1,0 +1,36 @@
+name: CI
+run-name: CI for commit ${{ github.sha }} by @${{ github.actor }}
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  ci:
+    name: Lint and Prettier Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.18'
+          cache: 'pnpm'
+
+      - name: Install deps
+        run: pnpm install
+
+      - name: Lint check
+        run: pnpm lint
+
+      - name: Prettier check
+        run: pnpm format:check
